@@ -1,18 +1,14 @@
 package com.michael.starwars.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
 
-@ToString
-@Getter
-@Setter
+@Data
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class StarShipResponse implements Serializable {
+public class StarShipPage implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int count;

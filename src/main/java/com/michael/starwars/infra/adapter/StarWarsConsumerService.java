@@ -1,9 +1,8 @@
 package com.michael.starwars.infra.adapter;
 
-import com.michael.starwars.domain.model.Film;
-import com.michael.starwars.domain.model.FilmResponse;
-import com.michael.starwars.domain.model.PeopleResponse;
-import com.michael.starwars.domain.model.StarShipResponse;
+import com.michael.starwars.domain.model.FilmPage;
+import com.michael.starwars.domain.model.PeoplePage;
+import com.michael.starwars.domain.model.StarShipPage;
 import com.michael.starwars.infra.utils.StarWarsUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,55 +15,38 @@ public class StarWarsConsumerService implements StarWarsConsumerAdapter {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private WebClient webClient = WebClient.create(StarWarsUrl.Films);
 
-    @Override
-    public FilmResponse filmFirtsPage() {
-        Mono<FilmResponse> filmResponseMono = WebClient
-                .create(StarWarsUrl.Films)
+    public FilmPage filmPage(String url) {
+        Mono<FilmPage> filmResponseMono = WebClient
+                .create(url)
                 .get()
                 .retrieve()
-                .bodyToMono(FilmResponse.class);
+                .bodyToMono(FilmPage.class);
 
-        FilmResponse film = filmResponseMono
+        return filmResponseMono
                 .share().block();
-        return film;
     }
 
     @Override
-    public PeopleResponse peopleFirtsPage() {
-        Mono<PeopleResponse> pageResponseMono = WebClient
-                .create(StarWarsUrl.People)
+    public PeoplePage peoplePage(String url) {
+        Mono<PeoplePage> pageResponseMono = WebClient
+                .create(url)
                 .get()
                 .retrieve()
-                .bodyToMono(PeopleResponse.class);
+                .bodyToMono(PeoplePage.class);
 
-        PeopleResponse page = pageResponseMono
+        return pageResponseMono
                 .share().block();
-        return page;
     }
 
     @Override
-    public StarShipResponse starShipFirtsPage() {
-        Mono<StarShipResponse> pageResponseMono = WebClient
-                .create(StarWarsUrl.StarShips)
+    public StarShipPage starShipPage(String url) {
+        Mono<StarShipPage> pageResponseMono = WebClient
+                .create(url)
                 .get()
                 .retrieve()
-                .bodyToMono(StarShipResponse.class);
+                .bodyToMono(StarShipPage.class);
 
-        StarShipResponse page = pageResponseMono
+        return pageResponseMono
                 .share().block();
-        return page;
-    }
-
-    @Override
-    public Film request() {
-        Mono<Film> filmMono = WebClient
-                .create(StarWarsUrl.Films+ "1/")
-                .get()
-                .retrieve()
-                .bodyToMono(Film.class);
-
-        Film film = filmMono
-                .share().block();
-        return film;
     }
 }

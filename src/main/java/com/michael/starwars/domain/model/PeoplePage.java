@@ -1,22 +1,18 @@
 package com.michael.starwars.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
 
-@ToString
-@Getter
-@Setter
+@Data
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class FilmResponse implements Serializable {
+public class PeoplePage implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int count;
     private String next;
     private String previous;
-    private List<Film> results;
+    private List<People> results;
 }

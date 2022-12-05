@@ -1,8 +1,10 @@
 USE db_example;
 
 DROP TABLE IF EXISTS Orders;
-DROP TABLE IF EXISTS Films;
+DROP TABLE IF EXISTS Film;
 DROP TABLE IF EXISTS People;
+DROP TABLE IF EXISTS Pilots;
+DROP TABLE IF EXISTS Characters;
 DROP TABLE IF EXISTS Starships;
 
 CREATE TABLE Orders (
@@ -22,17 +24,23 @@ CREATE TABLE Orders (
     totalProfit DECIMAL(10,2) UNSIGNED NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Films
+CREATE TABLE IF NOT EXISTS Film
 (
-    id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER UNSIGNED AUTO_INCREMENT,
     title TEXT NOT NULL,
-    episodeId TEXT NOT NULL,
-    openingCrawl TEXT NOT NULL,
+    episode_id INTEGER UNSIGNED NOT NULL UNIQUE,
+    opening_crawl TEXT NOT NULL,
     director TEXT NOT NULL,
     producer TEXT NOT NULL,
-    releaseDate TEXT NOT NULL,
-    characters TEXT NOT NULL
+    release_date DATE NOT NULL,
+    created DATE NOT NULL,
+    edited DATE NOT NULL,
+    url TEXT NOT NULL,
+    PRIMARY KEY(id)
 );
+# DEFAULT CHARACTER SET = utf8mb4;
+#     title VARCHAR(2048) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci' NOT NULL,
+# ALTER TABLE Film CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS People
 (

@@ -27,23 +27,51 @@ public class MysqlRepository implements JdbcPort {
 
     @Override
     public <T> T save(T reg) {
+//
+//        List<Field> entityFields = Arrays.asList(reg.getClass().getDeclaredFields());
+//
+//        List<String> fields = new ArrayList<>();
+//        List<Object> fieldValues = new ArrayList<>();
+//        entityFields.forEach(field -> {
+//            fields.add(field.getName());
+//            fieldValues.add(valueField(field, reg));
+//        });
+//        System.out.println("fieldValues = " + fieldValues);
+//        String sql = "INSERT INTO " +
+//                reg.getClass().getSimpleName() +
+//                "(" + String.join(",", fields) + ")" +
+//                " VALUES " +
+//                "(" + String.join(",", Collections.nCopies(fields.size(), "?")) + ")";
+//
+//        jdbcTemplate.update(sql, fieldValues);
+//
+//        return reg;
 
-        List<Field> entityFields = Arrays.asList(reg.getClass().getDeclaredFields());
+        Field[] entityFields = reg.getClass().getDeclaredFields();
 
-        List<String> fields = new ArrayList<>();
-        List<Object> fieldValues = new ArrayList<>();
-        entityFields.forEach(field -> {
-            fields.add(field.getName());
-            fieldValues.add(valueField(field, reg));
-        });
+        String[] fields = new String[ entityFields.length ];
+        Object[] fieldValues = new Object[ entityFields.length ];
 
-        String sql = "INSERT INTO " +
-                reg.getClass().getSimpleName() +
-                "(" + String.join(",", fields) + ")" +
-                " VALUES " +
-                "(" + String.join(",", Collections.nCopies(fields.size(), "?")) + ")";
+        try {
+            for ( int i=0; i<entityFields.length; i++ ) {
+                fields[i] = entityFields[i].getName();
+                fieldValues[i] = reg.getClass()
+                        .getMethod( "get"+entityFields[i].getName().substring(0,1).toUpperCase()+entityFields[i].getName().substring(1) )
+                        .invoke( reg );
+            }
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                 | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
+        }
 
-        jdbcTemplate.update(sql, fieldValues);
+        StringBuilder sql = new StringBuilder();
+        sql.append("INSERT INTO ")
+                .append( reg.getClass().getSimpleName() )
+                .append( "(" ).append( String.join( ",", fields) ).append( ")" )
+                .append( " VALUES " )
+                .append( "(" ).append( String.join( ",", Collections.nCopies( fields.length, "?") ) ).append( ")" );
+
+        jdbcTemplate.update(sql.toString(), fieldValues);
 
         return reg;
     }
@@ -54,7 +82,8 @@ public class MysqlRepository implements JdbcPort {
                     .getMethod("get" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1))
                     .invoke(reg);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw 
+                    new RuntimeException(e);
         }
     }
 
